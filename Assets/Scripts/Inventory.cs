@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Inventory
+public partial class Inventory
 {
     [System.Serializable]
     public class Slot
     {
         public CollectableType type;
         public int count;
+
         public int MaxAllowed;
 
         public Sprite icon; 
@@ -38,6 +39,19 @@ public class Inventory
             this.icon = item.icon;
             count++;
         }
+
+        public void RemoveItem()
+        {
+            if (count > 0)
+            {
+                count--;
+                if (count == 0)
+                {
+                    type = CollectableType.NONE;
+                    icon = null;
+                }
+            }
+        }
     }
 
     public List<Slot> slots = new List<Slot>();
@@ -52,7 +66,7 @@ public class Inventory
     }
 
     public void Add(Collectable item)
-        {
+    {
         foreach (Slot slot in slots)
         {
             if (slot.type == item.type && slot.CanAddItem())
@@ -70,5 +84,53 @@ public class Inventory
             }
         }
         Debug.LogWarning("Inventory full, cannot add item of type: ");
+    }
+
+    public void Remove(int index)
+    {
+        slots[index].RemoveItem();
+    }
+}
+
+public partial class Inventory
+{
+    public GameObject droppedItemPrefab; // assign in Inspector (or via GameManager)
+
+    public bool Drop(int slotID, Vector3 dropPosition)
+    {
+        if (slotID < 0 || slotID >= slots.Count) return false;
+
+        var slot = slots[slotID];
+        if (slot.type == CollectableType.NONE || slot.count <= 0) return false;
+
+        // You need a reference to the Collectable object for this slot.
+        // If your InventorySlot only stores "type", you must have a lookup somewhere.
+        // Example: Collectable item = GameManager.instance.itemManager.GetItemByType(slot.type);
+        Collectable item = GameManager.instance.itemManager.GetItemtype(slot.type); // <-- adapt if needed
+
+        if (item == null)
+        {
+            Debug.LogError($"Drop failed: no Collectable found for type {slot.type}");
+            return false;
+        }
+
+        // Spawn world drop
+        if (droppedItemPrefab == null)
+        {
+            Debug.LogError("Drop failed: droppedItemPrefab not assigned on Inventory.");
+            return false;
+        }
+
+        var go = Object.Instantiate(droppedItemPrefab, dropPosition, Quaternion.identity);
+        var worldDrop = go.GetComponent<WorldDrop>();
+        if (worldDrop != null)
+            worldDrop.Init(item, slot.count);
+
+        // Remove from inventory
+        slot.type = CollectableType.NONE;
+        slot.count = 0;
+        slots[slotID] = slot;
+
+        return true;
     }
 }

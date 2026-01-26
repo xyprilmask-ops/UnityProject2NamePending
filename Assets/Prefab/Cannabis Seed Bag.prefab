@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4692970598511520925}
   - component: {fileID: 1981376592217373963}
   - component: {fileID: 1025417931928536115}
+  - component: {fileID: 5938604217208223578}
   m_Layer: 0
   m_Name: Cannabis Seed Bag
   m_TagString: Untagged
@@ -152,3 +153,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Collectable
   type: 1
+  icon: {fileID: 0}
+  rb2d: {fileID: 0}
+--- !u!50 &5938604217208223578
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6560441753727306470}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 3
+  m_LinearDamping: 0.75
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
